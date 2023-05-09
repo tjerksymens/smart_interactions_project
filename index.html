@@ -10,6 +10,7 @@
     <style>
         body { margin: 0; padding: 0; }
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        img {height: 30px; width: 30px; border-radius: 50%; margin: auto;}
     </style>
 </head>
 
@@ -17,7 +18,14 @@
 
     <div id="map"></div>
 
+    <img id="profile-photo" src="./images/profile.jpg" alt="Profile Photo">
+
+
     <script>
+        // Create a new image object for the marker icon so we can see the user profile pik
+        const profilePhoto = new Image();
+        profilePhoto.src = "./images/profile.jpg";
+
         //mapbox token
         mapboxgl.accessToken = 'pk.eyJ1IjoidGphYWFyayIsImEiOiJjbGhnYXVocmExeWV2M3JwY2Nuc2h5cDZ1In0.r0PN1HMzTTtYxdu4pWD3NA';
 
@@ -34,7 +42,11 @@
         navigator.geolocation.getCurrentPosition(position => {
             const { longitude, latitude } = position.coords;
             map.setCenter([longitude, latitude]);
-            new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
+            // New marker as profile pic
+            const marker = new mapboxgl.Marker({
+            element: profilePhoto, // use image
+            anchor: 'bottom'})
+            .setLngLat([longitude, latitude]).addTo(map);
         });
 
         // Add zoom and rotation controls to the map.
