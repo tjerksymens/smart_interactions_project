@@ -1,0 +1,1 @@
+# smart_interactions_project
