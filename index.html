@@ -25,6 +25,13 @@
         zoom: 9 // starting zoom
     });
 
+    //location user and center
+    navigator.geolocation.getCurrentPosition(position => {
+        const { longitude, latitude } = position.coords;
+        map.setCenter([longitude, latitude]);
+        new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
+    });
+
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl());
 </script>
