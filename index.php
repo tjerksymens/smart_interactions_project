@@ -1,4 +1,5 @@
 <?php
+include_once(__DIR__ . "/bootstrap.inc.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
@@ -6,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Create a PDO instance and establish the database connection
-        $pdo = new PDO('mysql:host=ID393251_SupriseConnect.db.webhosting.be;dbname=ID393251_SupriseConnect', 'ID393251_SupriseConnect', 'ConnectionProject69!');
+        $pdo = Db::getInstance();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Prepare and execute the SQL statement to update the location data
