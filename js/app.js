@@ -2,6 +2,10 @@
 const profilePhoto = new Image();
 profilePhoto.src = "./images/profile.jpg";
 
+// friend image
+const secondUserPhoto = new Image();
+secondUserPhoto.src = "./images/DSCF7530.jpg";
+
 //mapbox token
 mapboxgl.accessToken = 'pk.eyJ1IjoidGphYWFyayIsImEiOiJjbGhnYXVocmExeWV2M3JwY2Nuc2h5cDZ1In0.r0PN1HMzTTtYxdu4pWD3NA';
 
@@ -24,6 +28,16 @@ navigator.geolocation.getCurrentPosition(position => {
     anchor: 'bottom'})
     .setLngLat([longitude, latitude]).addTo(map);
 });
+
+//second user's location
+const secondUserLngLat = [4.485876, 51.023313];
+//second user's profile photo
+const secondUserMarker = new mapboxgl.Marker({
+    element: secondUserPhoto,
+    anchor: 'bottom'
+})
+    .setLngLat(secondUserLngLat)
+    .addTo(map);
 
 // Add zoom and rotation controls to the map.
 map.addControl(new mapboxgl.NavigationControl());
