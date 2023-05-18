@@ -1,5 +1,6 @@
 <?php
-spl_autoload_register(function ($class) {
-    include_once(__DIR__ . "/classes/" . $class . ".php");
-});
+//autoload classes
+require_once __DIR__ . '/vendor/autoload.php';
+
+//autostart sessions
 session_start();

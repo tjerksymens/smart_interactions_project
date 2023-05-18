@@ -7,11 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Create a PDO instance and establish the database connection
-        $pdo = Db::getInstance();
+        $pdo = \SupriseConnect\Framework\Db::getInstance();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Prepare and execute the SQL statement to update the location data
-        $query = "UPDATE user SET latitude = :latitude, longitude = :longitude WHERE id = :id";
+        $query = "UPDATE users SET latitude = :latitude, longitude = :longitude WHERE id = :id";
         $statement = $pdo->prepare($query);
         $statement->bindParam(':latitude', $latitude);
         $statement->bindParam(':longitude', $longitude);
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" href="./css/style.css">
-    <title>Suprise Connect</title>
+    <title>SupriseConnect</title>
 </head>
 
 <body>

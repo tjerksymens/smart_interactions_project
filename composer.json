@@ -1,0 +1,17 @@
+{
+    "name": "tjaaark/xd_aiai_group_dev4",
+    "autoload": {
+        "psr-4": {
+            "SupriseConnect\\Framework\\": "src/SupriseConnect/Framework"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tjerk Symens",
+            "email": "98127222+tjerksymens@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "cloudinary/cloudinary_php": "^2.10"
+    }
+}
