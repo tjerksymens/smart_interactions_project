@@ -187,4 +187,45 @@ class User
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
         return $result['id'];
     }
+
+    public function canLogin($username, $password)
+    {
+        if (empty($username) || empty($password)) {
+            throw new \Exception("Email and password are required.");
+        } else {
+            $conn = Db::getInstance();
+            $statement = $conn->prepare("SELECT * FROM users WHERE email = :email OR username = :email");
+            $statement->bindValue(":email", $username);
+            $statement->execute();
+            $user = $statement->fetch(\PDO::FETCH_ASSOC);
+            $hash = $user['password'];
+
+            if (password_verify($password, $hash)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public static function updateLocation($latitude, $longitude, $userId)
+    {
+        try {
+            // Create a PDO instance and establish the database connection
+            $pdo = Db::getInstance();
+            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+            // Prepare and execute the SQL statement to update the location data
+            $query = "UPDATE users SET latitude = :latitude, longitude = :longitude WHERE id = :id";
+            $statement = $pdo->prepare($query);
+            $statement->bindParam(':latitude', $latitude);
+            $statement->bindParam(':longitude', $longitude);
+            $statement->bindParam(':id', $userId);
+            $statement->execute();
+
+            echo "Location data updated successfully";
+        } catch (\PDOException $e) {
+            echo "Error updating data in the database: " . $e->getMessage();
+        }
+    }
 }

@@ -1,26 +1,19 @@
 <?php
 include_once(__DIR__ . "/bootstrap.inc.php");
+
+if ($_SESSION['loggedin'] !== true) {
+    header('location: login.php');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
-    $userId = 1; // Specify the user ID you want to update
+    $user_id = $_SESSION['user_id'];
 
     try {
-        // Create a PDO instance and establish the database connection
-        $pdo = \SupriseConnect\Framework\Db::getInstance();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        // Prepare and execute the SQL statement to update the location data
-        $query = "UPDATE users SET latitude = :latitude, longitude = :longitude WHERE id = :id";
-        $statement = $pdo->prepare($query);
-        $statement->bindParam(':latitude', $latitude);
-        $statement->bindParam(':longitude', $longitude);
-        $statement->bindParam(':id', $userId);
-        $statement->execute();
-
-        echo "Location data updated successfully";
+        \SupriseConnect\Framework\User::updateLocation($latitude, $longitude, $user_id);
     } catch (PDOException $e) {
-        echo "Error updating data in the database: " . $e->getMessage();
+        echo "Error: " . $e->getMessage();
     }
 
     // Close the statement and database connection
