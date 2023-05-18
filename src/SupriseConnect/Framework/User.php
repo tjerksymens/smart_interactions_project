@@ -228,4 +228,14 @@ class User
             echo "Error updating data in the database: " . $e->getMessage();
         }
     }
+
+    public static function getUserById($id)
+    {
+        $conn = Db::getInstance();
+        $statement = $conn->prepare("SELECT * FROM users WHERE id = :id");
+        $statement->bindValue(":id", $id);
+        $statement->execute();
+        $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        return $result;
+    }
 }

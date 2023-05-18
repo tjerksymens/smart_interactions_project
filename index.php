@@ -1,6 +1,21 @@
 <?php
 include_once(__DIR__ . "/bootstrap.inc.php");
 
+include_once(__DIR__ . "/bootstrap.inc.php");
+
+use Cloudinary\Cloudinary;
+use Cloudinary\Transformation\Resize;
+
+$cloudinary = new Cloudinary(
+    [
+        'cloud' => [
+            'cloud_name' => 'doxzjrtjh',
+            'api_key'    => '436969446252812',
+            'api_secret' => 'JMz0eaR82cExLX0ZgEWmgcn8lb4',
+        ],
+    ]
+);
+
 if ($_SESSION['loggedin'] !== true) {
     header('location: login.php');
 }
@@ -23,8 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit(); // End the PHP script execution after handling the POST request
 }
 
-
-
+$user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
 
 ?>
 <!DOCTYPE html>
@@ -72,11 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update and send the location every minute
         setInterval(sendLocation, 60000);
 
-        // Create a new image object for the marker icon so we can see the user profile pik
+        // Create a new image object for the marker icon so we can see the user profile image
         const profilePhoto = new Image();
-        profilePhoto.src = "./images/profile.jpg";
+        profilePhoto.src = "<?php echo $cloudinary->image($user['image'])->resize(Resize::fill(100, 150))->toUrl(); ?>";
 
-        // friend image
+        // friends image
         const secondUserPhoto = new Image();
         secondUserPhoto.src = "./images/DSCF7530.jpg";
 

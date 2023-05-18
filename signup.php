@@ -2,6 +2,7 @@
 include_once(__DIR__ . "/bootstrap.inc.php");
 
 use Cloudinary\Cloudinary;
+use Cloudinary\Transformation\Resize;
 
 $cloudinary = new Cloudinary(
     [
