@@ -1,8 +1,7 @@
 <?php
-include_once(__DIR__ . "/bootstrap.php");
+include_once(__DIR__ . "/bootstrap.inc.php");
 
 use Cloudinary\Cloudinary;
-use Cloudinary\Transformation\Resize;
 
 $cloudinary = new Cloudinary(
     [
@@ -37,6 +36,7 @@ if (!empty($_POST)) {
                     $user->setLastname($_POST['lastname']);
                     $user->setPassword($_POST['password']);
                     $user->setConfirmPassword($_POST['confirmpassword']);
+                    $user->setImage($newImgName);
                     $user->save();
                     header("Location: login.php");
 

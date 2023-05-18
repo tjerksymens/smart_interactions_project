@@ -24,8 +24,8 @@ class Image
             throw new \Exception("Error uploading file: {$error}");
         }
 
-        if ($size > 1000000) {
-            throw new \Exception("File size exceeds limit of 1MB.");
+        if ($size > 10000000) {
+            throw new \Exception("File size exceeds limit of 10MB.");
         }
 
         $ext = pathinfo($name, PATHINFO_EXTENSION);
