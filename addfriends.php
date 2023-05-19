@@ -59,9 +59,21 @@ if (isset($_POST['addfriend'])) {
                     <div class="users" href="profile.php?id=<?php echo $user['id']; ?>">
                         <img src="<?php echo $cloudinary->image($user['image'])->resize(Resize::thumbnail()->width(100)->height(100))->toURL(); ?>" alt="profile picture">
                         <p><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></p>
-                        <form action="" method="post">
-                            <button type="submit" name="addfriend" value="<?php echo ($user['id']) ?>">Add friend</button>
-                        </form>
+                        <?php // Checkt of de user al vrienden is met de user waar je op klikt
+                        $friend = new \SupriseConnect\Framework\Friend();
+                        $isFriend = $friend->isFriend($_SESSION['user_id'], $user['id']);
+                        if ($isFriend !== true) {
+                            if ($user['id'] !== $_SESSION['user_id']) { // checkt of user de user is
+                        ?>
+                                <form action="" method="post">
+                                    <button type="submit" name="addfriend" value="<?php echo ($user['id']) ?>">Add friend</button>
+                                </form><?php
+                                    } else { ?>
+                                <p><?php echo "This is you"; ?></p><?php
+                                                                }
+                                                            } else { ?>
+                            <p><?php echo "You are already friends"; ?></p>
+                        <?php } ?>
                     </div>
                 </li>
             <?php endforeach; ?>
