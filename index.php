@@ -1,8 +1,6 @@
 <?php
 include_once(__DIR__ . "/bootstrap.inc.php");
 
-include_once(__DIR__ . "/bootstrap.inc.php");
-
 use Cloudinary\Cloudinary;
 use Cloudinary\Transformation\Resize;
 
@@ -134,6 +132,9 @@ $user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.NavigationControl());
     </script>
+
+    <h1>SupriseConnect</h1>
+    <a id="addfriends" href="addfriends.php">Add Friends</a>
 
 </body>
 
