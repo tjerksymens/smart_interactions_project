@@ -131,6 +131,7 @@ class User
         }
     }
 
+    //saves user to database
     public function save()
     {
         $conn = Db::getInstance();
@@ -144,6 +145,7 @@ class User
         return $statement->execute();
     }
 
+    //checks if email already exists
     public static function checkExistingEmail($email)
     {
         $conn = Db::getInstance();
@@ -161,6 +163,7 @@ class User
         }
     }
 
+    //checks if username already exists
     public static function checkExistingUsername($username)
     {
         $conn = Db::getInstance();
@@ -178,6 +181,7 @@ class User
         }
     }
 
+    //gets user id
     public static function getId($email)
     {
         $conn = Db::getInstance();
@@ -188,6 +192,7 @@ class User
         return $result['id'];
     }
 
+    //checks if user can login
     public function canLogin($username, $password)
     {
         if (empty($username) || empty($password)) {
@@ -208,6 +213,7 @@ class User
         }
     }
 
+    //sends location to database
     public static function updateLocation($latitude, $longitude, $userId)
     {
         try {
@@ -229,6 +235,7 @@ class User
         }
     }
 
+    // zoekt user op id
     public static function getUserById($id)
     {
         $conn = Db::getInstance();
@@ -236,6 +243,17 @@ class User
         $statement->bindValue(":id", $id);
         $statement->execute();
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    // zoekt user op username of firstname of lastname
+    public static function searchUsers($search)
+    {
+        $conn = Db::getInstance();
+        $statement = $conn->prepare("SELECT * FROM users WHERE username LIKE :search OR firstname LIKE :search OR lastname LIKE :search");
+        $statement->bindValue(":search", '%' . $search . '%');
+        $statement->execute();
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
 }
