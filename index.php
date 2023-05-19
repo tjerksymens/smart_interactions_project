@@ -4,15 +4,13 @@ include_once(__DIR__ . "/bootstrap.inc.php");
 use Cloudinary\Cloudinary;
 use Cloudinary\Transformation\Resize;
 
-$cloudinary = new Cloudinary(
-    [
-        'cloud' => [
-            'cloud_name' => 'doxzjrtjh',
-            'api_key'    => '436969446252812',
-            'api_secret' => 'JMz0eaR82cExLX0ZgEWmgcn8lb4',
-        ],
-    ]
-);
+$cloudinary = new Cloudinary([
+    'cloud' => [
+        'cloud_name' => 'doxzjrtjh',
+        'api_key'    => '436969446252812',
+        'api_secret' => 'JMz0eaR82cExLX0ZgEWmgcn8lb4',
+    ],
+]);
 
 if ($_SESSION['loggedin'] !== true) {
     header('location: login.php');
@@ -29,14 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Error: " . $e->getMessage();
     }
 
-    // Close the statement and database connection
-    $statement = null;
-    $pdo = null;
-
     exit(); // End the PHP script execution after handling the POST request
 }
 
 $user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
+
+// Get the friends locations from the database
+$friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
 
 ?>
 <!DOCTYPE html>
@@ -53,10 +50,61 @@ $user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
 </head>
 
 <body>
-
     <div id="map"></div>
+    <h1>SupriseConnect</h1>
+    <a id="addfriends" href="addfriends.php">Add Friends</a>
+
     <script>
-        //Send the location to the database
+        // Function to update friend markers on the map
+        function updateFriendMarkers() {
+            // Remove all the friend markers from the map
+            friends.forEach(marker => marker.remove());
+
+            // Fetch the updated friend locations from the server
+            // and update the friends array
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "getFriendsLocations.php", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    friends = JSON.parse(xhr.responseText);
+                    addFriendMarkers();
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to add friend markers to the map
+        function addFriendMarkers() {
+            friends.forEach(friend => {
+                const {
+                    latitude,
+                    longitude,
+                    image
+                } = friend;
+
+                // Create a new image object for the marker icon so we can see the user profile image
+                const friendPhoto = new Image();
+                <?php foreach ($friends as $friend) : ?>
+                    if (friend['image']) {
+                        friendPhoto.src = "<?php echo $cloudinary->image($friend['image'])->resize(Resize::fill(100, 150))->toUrl(); ?>";
+                    } else {
+                        friendPhoto.src = "default-profile-image.jpg";
+                    }
+                <?php endforeach; ?>
+
+                // Add a marker for the friend
+                const friendMarker = new mapboxgl.Marker({
+                        element: friendPhoto,
+                        anchor: 'bottom'
+                    })
+                    .setLngLat([longitude, latitude])
+                    .addTo(map);
+
+                friends.push(friendMarker); // Add the marker to the friends array
+            });
+        }
+
+        // Function to get the users location and send it to the server
         function sendLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -86,25 +134,25 @@ $user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
 
         // Create a new image object for the marker icon so we can see the user profile image
         const profilePhoto = new Image();
-        profilePhoto.src = "<?php echo $cloudinary->image($user['image'])->resize(Resize::fill(100, 150))->toUrl(); ?>";
+        <?php if ($user['image']) : ?>
+            profilePhoto.src = "<?php echo $cloudinary->image($user['image'])->resize(Resize::fill(100, 150))->toUrl(); ?>";
+        <?php else : ?>
+            // Set a default image URL or handle the situation when $user['image'] is not available
+            profilePhoto.src = "default-profile-image.jpg";
+        <?php endif; ?>
 
-        // friends image
-        const secondUserPhoto = new Image();
-        secondUserPhoto.src = "./images/DSCF7530.jpg";
-
-        //mapbox token
+        // Mapbox token
         mapboxgl.accessToken = 'pk.eyJ1IjoidGphYWFyayIsImEiOiJjbGhnYXVocmExeWV2M3JwY2Nuc2h5cDZ1In0.r0PN1HMzTTtYxdu4pWD3NA';
 
-        //mapbox map
+        // Mapbox map
         const map = new mapboxgl.Map({
             container: 'map', // container ID
-            // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
             style: 'mapbox://styles/mapbox/streets-v12', // style URL
             center: [-74.5, 40], // starting position
             zoom: 15 // starting zoom
         });
 
-        //location user and center
+        // Location user and center
         navigator.geolocation.getCurrentPosition(position => {
             const {
                 longitude,
@@ -119,23 +167,17 @@ $user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
                 .setLngLat([longitude, latitude]).addTo(map);
         });
 
-        //second user's location
-        const secondUserLngLat = [4.485876, 51.023313];
-        //second user's profile photo
-        const secondUserMarker = new mapboxgl.Marker({
-                element: secondUserPhoto,
-                anchor: 'bottom'
-            })
-            .setLngLat(secondUserLngLat)
-            .addTo(map);
-
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.NavigationControl());
+
+        var friends = <?php echo json_encode($friends); ?>;
+
+        // Call the initial friend marker update
+        addFriendMarkers();
+
+        // Update the friend markers every minute
+        setInterval(updateFriendMarkers, 60000);
     </script>
-
-    <h1>SupriseConnect</h1>
-    <a id="addfriends" href="addfriends.php">Add Friends</a>
-
 </body>
 
 </html>

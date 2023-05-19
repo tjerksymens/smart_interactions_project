@@ -33,4 +33,26 @@ class Friend
             return false;
         }
     }
+
+    //gets all friends of user and get all informatie of friends id from users table
+    public static function getFriends($user_id)
+    {
+        $conn = Db::getInstance();
+        $statement = $conn->prepare("SELECT * FROM friends WHERE user_id = :user_id");
+        $statement->bindValue(":user_id", $user_id);
+        $statement->execute();
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        $friends = array();
+
+        foreach ($result as $friend) {
+            $statement = $conn->prepare("SELECT * FROM users WHERE id = :friend_id");
+            $statement->bindValue(":friend_id", $friend['friend_id']);
+            $statement->execute();
+            $friend = $statement->fetch(\PDO::FETCH_ASSOC);
+            array_push($friends, $friend);
+        }
+
+        return $friends;
+    }
 }
