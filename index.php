@@ -4,13 +4,15 @@ include_once(__DIR__ . "/bootstrap.inc.php");
 use Cloudinary\Cloudinary;
 use Cloudinary\Transformation\Resize;
 
-$cloudinary = new Cloudinary([
-    'cloud' => [
-        'cloud_name' => 'doxzjrtjh',
-        'api_key'    => '436969446252812',
-        'api_secret' => 'JMz0eaR82cExLX0ZgEWmgcn8lb4',
-    ],
-]);
+$cloudinary = new Cloudinary(
+    [
+        'cloud' => [
+            'cloud_name' => 'doxzjrtjh',
+            'api_key'    => '436969446252812',
+            'api_secret' => 'JMz0eaR82cExLX0ZgEWmgcn8lb4',
+        ],
+    ]
+);
 
 if ($_SESSION['loggedin'] !== true) {
     header('location: login.php');
@@ -36,6 +38,7 @@ $user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
 $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,16 +61,23 @@ $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
         // Function to update friend markers on the map
         function updateFriendMarkers() {
             // Remove all the friend markers from the map
-            friends.forEach(marker => marker.remove());
-
+            friends.forEach(marker => {
+                if (marker instanceof mapboxgl.Marker) {
+                    marker.remove();
+                }
+            });
             // Fetch the updated friend locations from the server
             // and update the friends array
             const xhr = new XMLHttpRequest();
             xhr.open("GET", "getFriendsLocations.php", true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    friends = JSON.parse(xhr.responseText);
-                    addFriendMarkers();
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        friends = JSON.parse(xhr.responseText);
+                        addFriendMarkers();
+                    } else {
+                        console.error('Error:', xhr.status, xhr.statusText);
+                    }
                 }
             };
             xhr.send();
@@ -84,25 +94,35 @@ $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
 
                 // Create a new image object for the marker icon so we can see the user profile image
                 const friendPhoto = new Image();
-                <?php foreach ($friends as $friend) : ?>
-                    if (friend['image']) {
-                        friendPhoto.src = "<?php echo $cloudinary->image($friend['image'])->resize(Resize::fill(100, 150))->toUrl(); ?>";
-                    } else {
-                        friendPhoto.src = "default-profile-image.jpg";
+
+                // Fetch the Cloudinary image URL dynamically using AJAX
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "getCloudinaryImageUrl.php?image=" + encodeURIComponent(image), true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        const imageUrl = xhr.responseText;
+
+                        if (imageUrl) {
+                            friendPhoto.src = imageUrl;
+                        } else {
+                            friendPhoto.src = "default-profile-image.jpg";
+                        }
+
+                        // Add a marker for the friend
+                        const friendMarker = new mapboxgl.Marker({
+                                element: friendPhoto,
+                                anchor: 'bottom'
+                            })
+                            .setLngLat([longitude, latitude])
+                            .addTo(map);
+
+                        friends.push(friendMarker); // Add the marker to the friends array
                     }
-                <?php endforeach; ?>
-
-                // Add a marker for the friend
-                const friendMarker = new mapboxgl.Marker({
-                        element: friendPhoto,
-                        anchor: 'bottom'
-                    })
-                    .setLngLat([longitude, latitude])
-                    .addTo(map);
-
-                friends.push(friendMarker); // Add the marker to the friends array
+                };
+                xhr.send();
             });
         }
+
 
         // Function to get the users location and send it to the server
         function sendLocation() {
