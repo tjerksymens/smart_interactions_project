@@ -1,0 +1,16 @@
+<?php
+
+namespace SupriseConnect\Framework;
+
+class Friend
+{
+    public function addFriend($user_id, $friend_id)
+    {
+        $conn = Db::getInstance();
+        $statement = $conn->prepare("INSERT INTO friends (user_id, friend_id) VALUES (:user_id, :friend_id)");
+        $statement->bindValue(":user_id", $user_id);
+        $statement->bindValue(":friend_id", $friend_id);
+        $result = $statement->execute();
+        return $result;
+    }
+}

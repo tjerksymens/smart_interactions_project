@@ -23,6 +23,12 @@ if (isset($_GET['search'])) {
     $users = \SupriseConnect\Framework\User::searchUsers($_GET['search']);
 }
 
+if (isset($_POST['addfriend'])) {
+    $friend = new \SupriseConnect\Framework\Friend();
+    $friend->addFriend($_SESSION['user_id'], $_POST['addfriend']);
+    header('location: index.php');
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +59,7 @@ if (isset($_GET['search'])) {
                     <div class="users" href="profile.php?id=<?php echo $user['id']; ?>">
                         <img src="<?php echo $cloudinary->image($user['image'])->resize(Resize::thumbnail()->width(100)->height(100))->toURL(); ?>" alt="profile picture">
                         <p><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></p>
-                        <form action="" method="get">
+                        <form action="" method="post">
                             <button type="submit" name="addfriend" value="<?php echo ($user['id']) ?>">Add friend</button>
                         </form>
                     </div>
