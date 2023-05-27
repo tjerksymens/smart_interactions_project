@@ -1,30 +1,30 @@
 body { 
     margin: 0; 
-    padding: 0; 
+    padding: 0;
+    background-color: #353434; 
 }
 
 #map { 
     position: absolute; 
-    top: 0; 
+    top: 58px; 
     bottom: 0; 
     width: 100%; 
 }
 
 img {
-    height: 30px; 
-    width: 30px; 
+    height: 40px; 
+    width: 40px; 
     border-radius: 50%; 
     margin: auto;
 }
 
 h1 {
+    font-size: 32px;
+    color: white;
     text-align: center;
-    font-family: 'Roboto', sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    color: #4d4d4d;
-    margin: 18px;
-    position: fixed;
+    background-color: #0e9cf0;
+    margin-top: 0px;
+    padding: 10px;
 }
 
 p {
@@ -38,13 +38,13 @@ p {
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
-    color: #0e9cf0;
+    color: white;
     position: fixed;
-    right: 56px;
-    margin-left: 220px;
-    margin-top: 16px;
-    background-color: white;
-    padding: 8px 16px;
+    bottom: 16px;
+    right: 16px;
+    margin: 16px;
+    background-color: #0e9cf0;
+    padding: 16px 16px;
     border-radius: 8px;
 }
 
@@ -52,20 +52,59 @@ p {
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
-    color: #0e9cf0;
+    color: white;
     position: fixed;
+    top: 10px;
+    left: 52px;
     right: 56px;
-    margin-left: 220px;
-    margin-top: 16px;
-    background-color: white;
     padding: 8px 16px;
     border-radius: 8px;
 }
 
 .searchfriends {
-    padding-top: 58px;
+    padding-top: 16px;
     padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #0e9cf0;
+    margin: 40px 80px;
+    border-radius: 8px;
 }
+
+.searchfriends label {
+    display: block;
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: white;
+}
+
+.searchfriends input[type="text"]{
+    width: 80%;
+    height: 40px;
+    font-size: 18px;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+.searchfriends input[type="submit"] {
+    width: 80%;
+    height: 40px;
+    font-size: 18px;
+    padding: 8px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.searchfriends input[type="submit"] {
+    background-color: white;
+    color: #0e9cf0;
+    border: none;
+    cursor: pointer;
+}
+
 
 li {
     list-style-type: none;
@@ -92,4 +131,115 @@ button{
     width: 57px;
     border-radius: 50%;
     margin: 0;
+}
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form {
+    background-color: #0e9cf0;
+    padding: 40px 80px;
+    border-radius: 8px;
+}
+
+.form__login__title {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.form__error {
+    color: white;
+    background-color: #ff0000;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.form__field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.form__field label {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.form__field input[type="text"]{
+    flex: 1;
+    width: 100%;
+    height: 40px;
+    font-size: 18px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+.form__field input[type="password"] {
+    flex: 1;
+    width: 100%;
+    height: 40px;
+    font-size: 18px;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+}
+
+.btn {
+    text-decoration: none;
+    font-size: 18px;
+    color: #0e9cf0;
+    background-color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn--primary {
+    background-color: white;
+    color: #353434;
+}
+
+.form__login__links {
+    margin-top: 20px;
+}
+
+.form__login__links a {
+    color: white;
+}
+
+
+.signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form__signup {
+    background-color: #0e9cf0;
+    padding: 40px 80px;
+    border-radius: 8px;
+}
+
+.form__signup__title {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.form__signup__links {
+    margin-top: 20px;
+    color: white;
+}
+
+.form__signup__links p {
+    margin-bottom: 8px;
+}
+
+.form__signup__links a {
+    color: white;
 }

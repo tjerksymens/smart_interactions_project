@@ -43,7 +43,7 @@ if (isset($_POST['addfriend'])) {
 
 <body>
     <h1>Add friends</h1>
-    <a id="go_to_homepage" href="index.php">Homepage</a>
+    <a id="go_to_homepage" href="index.php">⬅️ Back</a>
     <!-- Toont zoek friends -->
     <form action="" method="get" class="searchfriends">
         <label for="search">Search for friends</label>
