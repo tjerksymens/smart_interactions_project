@@ -48,6 +48,24 @@ p {
     border-radius: 8px;
 }
 
+.logout {
+    position: fixed;
+    bottom: 34px;
+    left: 16px;
+    margin: 16px;
+  }
+  
+  .logout a {
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: white;
+    background-color: #ff0000; /* Rood achtergrondkleur */
+    padding: 16px 16px;
+    border-radius: 8px;
+  }
+  
+
 #go_to_homepage {
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
@@ -243,3 +261,60 @@ button{
 .form__signup__links a {
     color: white;
 }
+  
+.users li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 320px;
+    background-color: #4d4d4d;
+    padding: 10px;
+    border-radius: 8px;
+    margin-left: 40px;
+  }
+  
+  .users img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin: 6px 10px 0px 6px;
+  }
+  
+  .users .user-info {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+  }
+  
+  .users .user-details {
+    display: flex;
+    flex-direction: row;
+    flex: 1; /* Toegevoegde regel voor gelijke breedte */
+  }
+  
+  .users .user-details p {
+    display: flex;
+    align-items:flex-start;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: white;
+    margin: 16px 0px 16px 0px ;
+  }
+  
+  .users .add-friend-button {
+    padding: 16px;
+    margin-left: 42px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #0e9cf0;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .users .already-friends {
+    font-size: 16px;
+    color: white;
+  }
+  
+  

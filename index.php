@@ -18,6 +18,13 @@ if ($_SESSION['loggedin'] !== true) {
     header('location: login.php');
 }
 
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('location: login.php');
+    exit;
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
@@ -56,6 +63,11 @@ $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
     <div id="map"></div>
     <h1>SupriseConnect</h1>
     <a id="addfriends" href="addfriends.php">Add Friends</a>
+    <div class="logout">
+        <a href="index.php?logout=true">Log out</a>
+    </div>
+
+
 
     <script>
         // Function to update friend markers on the map
