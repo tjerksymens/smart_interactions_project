@@ -1,6 +1,7 @@
 <?php
 include_once(__DIR__ . "/bootstrap.inc.php");
 
+//cloudinary connection
 use Cloudinary\Cloudinary;
 use Cloudinary\Transformation\Resize;
 
@@ -13,18 +14,21 @@ $cloudinary = new Cloudinary(
         ],
     ]
 );
+//cloudinary connection
 
+//if your not logged in you can't acces this page
 if ($_SESSION['loggedin'] !== true) {
     header('location: login.php');
 }
 
+//logout
 if (isset($_GET['logout'])) {
     session_destroy();
     header('location: login.php');
     exit;
 }
 
-
+//update location of user every minute
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
@@ -39,11 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit(); // End the PHP script execution after handling the POST request
 }
 
+// Get the user from the database
 $user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
 
 // Get the friends locations from the database
 $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
 
+// Get the friends information from the database
+$vriendjes = \SupriseConnect\Framework\User::getFriendsUsername($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -104,6 +111,23 @@ $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
                     image
                 } = friend;
 
+                // Calculate the distance between the user and the friend
+                const userLatitude = <?php echo $user['latitude']; ?>;
+                const userLongitude = <?php echo $user['longitude']; ?>;
+                const distance = calculateDistance(latitude, longitude, userLatitude, userLongitude);
+
+                // Distance that is close for friends to be notified
+                const distanceThreshold = 1;
+
+                // Check if the friend is close to the user
+                <?php foreach ($vriendjes as $vriend) : ?>
+                    <?php if (isset($vriend['firstname'])) : ?>
+                        if (distance <= distanceThreshold) {
+                            console.log("User is close to friend: " + "<?php echo $vriend['firstname']; ?>");
+                        }
+                    <?php endif; ?>
+                <?php endforeach; ?>
+
                 // Create a new image object for the marker icon so we can see the user profile image
                 const friendPhoto = new Image();
 
@@ -134,6 +158,26 @@ $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
                 xhr.send();
             });
         }
+
+        // Function to calculate the distance between two coordinates
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const degToRad = Math.PI / 180;
+            const earthRadius = 6371; // Radius of the Earth in kilometers
+
+            const dLat = (lat2 - lat1) * degToRad;
+            const dLon = (lon2 - lon1) * degToRad;
+
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * degToRad) * Math.cos(lat2 * degToRad) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            const distance = earthRadius * c;
+            return distance;
+        }
+
 
 
         // Function to get the users location and send it to the server

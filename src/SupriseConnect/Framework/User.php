@@ -256,4 +256,15 @@ class User
         $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
+
+    //get friends username from users class
+    public static function getFriendsUsername($id)
+    {
+        $conn = Db::getInstance();
+        $statement = $conn->prepare("SELECT * FROM users INNER JOIN friends ON users.id = friends.user_id WHERE friends.friend_id = :id");
+        $statement->bindValue(":id", $id);
+        $statement->execute();
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
