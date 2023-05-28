@@ -52,34 +52,34 @@ if (isset($_POST['addfriend'])) {
     </form>
 
     <!-- Als users is geset geeft hij alle bijpassende users weer -->
-        <?php if (isset($users)) : ?>
-    <ul class="users">
-        <?php foreach ($users as $user) : ?>
-        <li>
-            <div class="user-info">
-            <img src="<?php echo $cloudinary->image($user['image'])->resize(Resize::thumbnail()->width(100)->height(100))->toURL(); ?>" alt="profile picture">
-            <div class="user-details">
-                <p><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></p>
-                <?php
-                $friend = new \SupriseConnect\Framework\Friend();
-                $isFriend = $friend->isFriend($_SESSION['user_id'], $user['id']);
-                if ($isFriend !== true) {
-                if ($user['id'] !== $_SESSION['user_id']) {
-                ?>
-                    <form action="" method="post">
-                    <button class="add-friend-button" type="submit" name="addfriend" value="<?php echo ($user['id']) ?>">Add friend</button>
-                    </form>
-                <?php } else { ?>
-                    <p class="already-friends">This is you</p>
-                <?php }
-                } else { ?>
-                    <p class="already-friends">You are already friends</p>
-                <?php } ?>
-            </div>
-            </div>
-        </li>
-        <?php endforeach; ?>
-    </ul>
+    <?php if (isset($users)) : ?>
+        <ul class="users">
+            <?php foreach ($users as $user) : ?>
+                <li>
+                    <div class="user-info">
+                        <img src="<?php echo $cloudinary->image($user['image'])->resize(Resize::thumbnail()->width(100)->height(100))->toURL(); ?>" alt="profile picture">
+                        <div class="user-details">
+                            <p><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></p>
+                            <?php
+                            $friend = new \SupriseConnect\Framework\Friend();
+                            $isFriend = $friend->isFriend($_SESSION['user_id'], $user['id']);
+                            if ($isFriend !== true) {
+                                if ($user['id'] !== $_SESSION['user_id']) {
+                            ?>
+                                    <form action="" method="post">
+                                        <button class="add-friend-button" type="submit" name="addfriend" value="<?php echo ($user['id']) ?>">Add friend</button>
+                                    </form>
+                                <?php } else { ?>
+                                    <p class="already-friends">This is you</p>
+                                <?php }
+                            } else { ?>
+                                <p class="already-friends">You are already friends</p>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
     <?php endif; ?>
 
 </body>

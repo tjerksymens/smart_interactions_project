@@ -120,8 +120,11 @@ $vriendjes = \SupriseConnect\Framework\User::getFriendsInformation($_SESSION['us
                 // Distance that is close for friends to be notified
                 const distanceThreshold = 1;
 
+                $emailSent = false;
+
                 <?php foreach ($vriendjes as $vriend) : ?>
-                    if (distance <= distanceThreshold) {
+                    if (distance <= distanceThreshold && !$emailSent) {
+                        $emailSent = true;
                         console.log("You are close to <?php echo htmlspecialchars($vriend['firstname'])  . ' ' . htmlspecialchars($vriend['lastname']) ?>");
                         <?php
                         $email = new \SendGrid\Mail\Mail(); //create new email
