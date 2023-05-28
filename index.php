@@ -1,6 +1,6 @@
 <?php
 include_once(__DIR__ . "/bootstrap.inc.php");
-$config = parse_ini_file( "config/config.ini");
+$config = parse_ini_file("config/config.ini");
 $api_key = $config['sendgrid_api_key'];
 
 //cloudinary connection
@@ -122,12 +122,12 @@ $vriendjes = \SupriseConnect\Framework\User::getFriendsInformation($_SESSION['us
 
                 <?php foreach ($vriendjes as $vriend) : ?>
                     if (distance <= distanceThreshold) {
-                        console.log("You are close to <?php echo htmlspecialchars($vriend['firstname'])  . ' ' . htmlspecialchars($vriend['lastname'])?>");
+                        console.log("You are close to <?php echo htmlspecialchars($vriend['firstname'])  . ' ' . htmlspecialchars($vriend['lastname']) ?>");
                         <?php
-                        $email = new \SendGrid\Mail\Mail();
+                        $email = new \SendGrid\Mail\Mail(); //create new email
                         $email->setFrom("r0883194@student.thomasmore.be", "SuprisConnect");
                         $email->setSubject("You are close to a friend");
-                        $email->addTo($vriend['email']);
+                        $email->addTo($user['email'], $user['firstname'] . ' ' . $user['lastname']);
                         $email->addContent(
                             "text/html",
                             "Hi there,<br><br>You are close to " . $vriend['firstname'] . ' ' . $vriend['lastname'] . "<br><br>Best,<br>SupriseConnect"
@@ -138,9 +138,9 @@ $vriendjes = \SupriseConnect\Framework\User::getFriendsInformation($_SESSION['us
                             $responseData = $response;
                         } catch (Exception $e) {
                             echo 'Caught exception: ' . $e->getMessage() . "\n";
-                        }?>
+                        } ?>
                     }
-                <?php endforeach;?>
+                <?php endforeach; ?>
 
 
                 // Create a new image object for the marker icon so we can see the user profile image
