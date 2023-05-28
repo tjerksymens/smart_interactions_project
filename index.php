@@ -1,5 +1,7 @@
 <?php
 include_once(__DIR__ . "/bootstrap.inc.php");
+$config = parse_ini_file( "config/config.ini");
+$api_key = $config['sendgrid_api_key'];
 
 //cloudinary connection
 use Cloudinary\Cloudinary;
@@ -14,7 +16,6 @@ $cloudinary = new Cloudinary(
         ],
     ]
 );
-//cloudinary connection
 
 //if your not logged in you can't acces this page
 if ($_SESSION['loggedin'] !== true) {
@@ -50,7 +51,7 @@ $user = \SupriseConnect\Framework\User::getUserById($_SESSION['user_id']);
 $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
 
 // Get the friends information from the database
-$vriendjes = \SupriseConnect\Framework\User::getFriendsUsername($_SESSION['user_id']);
+$vriendjes = \SupriseConnect\Framework\User::getFriendsInformation($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -119,14 +120,28 @@ $vriendjes = \SupriseConnect\Framework\User::getFriendsUsername($_SESSION['user_
                 // Distance that is close for friends to be notified
                 const distanceThreshold = 1;
 
-                // Check if the friend is close to the user
                 <?php foreach ($vriendjes as $vriend) : ?>
-                    <?php if (isset($vriend['firstname'])) : ?>
-                        if (distance <= distanceThreshold) {
-                            console.log("User is close to friend: " + "<?php echo $vriend['firstname']; ?>");
-                        }
-                    <?php endif; ?>
-                <?php endforeach; ?>
+                    if (distance <= distanceThreshold) {
+                        console.log("You are close to <?php echo htmlspecialchars($vriend['firstname'])  . ' ' . htmlspecialchars($vriend['lastname'])?>");
+                        <?php
+                        $email = new \SendGrid\Mail\Mail();
+                        $email->setFrom("r0883194@student.thomasmore.be", "SuprisConnect");
+                        $email->setSubject("You are close to a friend");
+                        $email->addTo($vriend['email']);
+                        $email->addContent(
+                            "text/html",
+                            "Hi there,<br><br>You are close to " . $vriend['firstname'] . ' ' . $vriend['lastname'] . "<br><br>Best,<br>SupriseConnect"
+                        );
+                        $sendgrid = new \SendGrid($api_key);
+                        try {
+                            $response = $sendgrid->send($email);
+                            $responseData = $response;
+                        } catch (Exception $e) {
+                            echo 'Caught exception: ' . $e->getMessage() . "\n";
+                        }?>
+                    }
+                <?php endforeach;?>
+
 
                 // Create a new image object for the marker icon so we can see the user profile image
                 const friendPhoto = new Image();

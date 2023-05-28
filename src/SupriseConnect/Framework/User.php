@@ -258,7 +258,7 @@ class User
     }
 
     //get friends username from users class
-    public static function getFriendsUsername($id)
+    public static function getFriendsInformation($id)
     {
         $conn = Db::getInstance();
         $statement = $conn->prepare("SELECT * FROM users INNER JOIN friends ON users.id = friends.user_id WHERE friends.friend_id = :id");
