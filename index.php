@@ -64,7 +64,7 @@ $friends = \SupriseConnect\Framework\Friend::getFriends($_SESSION['user_id']);
     <h1>SupriseConnect</h1>
     <a id="addfriends" href="addfriends.php">Add Friends</a>
     <div class="logout">
-        <a href="index.php?logout=true">Log out</a>
+        <a href="logout.php">Log out</a>
     </div>
 
 
